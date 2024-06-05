@@ -1,51 +1,36 @@
 import javax.swing.*;
+import java.awt.*;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
-import java.util.function.BiConsumer;
-import java.util.function.BinaryOperator;
-import java.util.function.Function;
-import java.util.function.Supplier;
-import java.util.stream.Collector;
 import java.util.stream.Stream;
 
 public class Main {
     public static void main(String[] args) {
         Stream.of(
-                new JFrame()
-        ).collect(
-                new Collector<JFrame, List<JFrame>, List<JFrame>>() {
+                new JFrame("tetris"),
+                new Color[] {Color.cyan, Color.blue, Color.orange, Color.yellow, Color.green, Color.pink, Color.red}, // tetraminoColors
+                new Color[12][24], // well
+                new Point(), // pieceOrigin
+                0, // currentPiece
+                0, // rotation
+                new ArrayList<Integer>(), // next pieces
+                0 // score
 
-                    @Override
-                    public Supplier<List<JFrame>> supplier() {
-                        return ArrayList::new;
+        ).peek(
+                (frame) -> {
+                    if (frame instanceof JFrame) {
+                        ((JFrame) frame).setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
                     }
-
-                    @Override
-                    public BiConsumer<List<JFrame>, JFrame> accumulator() {
-                        return List::add;
+                }
+        ).peek(
+                (frame) -> {
+                    if (frame instanceof JFrame) {
+                        ((JFrame) frame).setSize(12*26+10, 26*23+25);
                     }
-
-                    @Override
-                    public BinaryOperator<List<JFrame>> combiner() {
-                        return (l1, l2) -> {
-                            l1.forEach(
-                                    (jFrame) -> jFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE)
-                            );
-                            l1.addAll(l2);
-                            return l2;
-                        };
-                    }
-
-                    @Override
-                    public Function<List<JFrame>, List<JFrame>> finisher() {
-                        return Collections::unmodifiableList;
-                    }
-
-                    @Override
-                    public Set<Characteristics> characteristics() {
-                        return Set.of(Characteristics.UNORDERED);
+                }
+        ).findFirst().ifPresent(
+                (frame) -> {
+                    if (frame instanceof JFrame) {
+                        ((JFrame) frame).setVisible(true);
                     }
                 }
         );
