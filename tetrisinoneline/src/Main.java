@@ -14,7 +14,7 @@ public class Main {
                 0, // rotation
                 new ArrayList<Integer>(), // next pieces
                 0 // score
-
+                // 0 - 7
         ).peek(
                 (frame) -> {
                     if (frame instanceof JFrame) {
