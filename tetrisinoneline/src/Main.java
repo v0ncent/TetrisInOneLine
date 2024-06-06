@@ -1,38 +1,33 @@
 import javax.swing.*;
 import java.awt.*;
-import java.util.ArrayList;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 public class Main {
     public static void main(String[] args) {
-        Stream.of(
-                new JFrame("tetris"),
-                new Color[] {Color.cyan, Color.blue, Color.orange, Color.yellow, Color.green, Color.pink, Color.red}, // tetraminoColors
-                new Color[12][24], // well
-                new Point(), // pieceOrigin
-                0, // currentPiece
-                0, // rotation
-                new ArrayList<Integer>(), // next pieces
-                0 // score
-                // 0 - 7
-        ).peek(
-                (frame) -> {
-                    if (frame instanceof JFrame) {
-                        ((JFrame) frame).setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-                    }
-                }
-        ).peek(
-                (frame) -> {
-                    if (frame instanceof JFrame) {
-                        ((JFrame) frame).setSize(12*26+10, 26*23+25);
-                    }
-                }
-        ).findFirst().ifPresent(
-                (frame) -> {
-                    if (frame instanceof JFrame) {
-                        ((JFrame) frame).setVisible(true);
-                    }
-                }
+
+        Stream.concat(
+                Stream.of(
+                        new JFrame("tetris")
+                ).peek(
+                        (frame) -> frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE)
+                ).peek(
+                        (frame) -> frame.setSize(12*26+10, 26*23+25)
+                ),
+
+                Stream.of(
+                        (Runnable) () -> IntStream.range(0, 12).forEach(i ->
+                                IntStream.range(0, 23).forEach(j ->
+                                        ((Color[][]) Stream.of((Object) new Color[12][24]).findFirst().get())[i][j] = (i == 0 || i == 11 || j == 22) ? Color.GRAY : Color.BLACK
+                                )
+                        )
+                ).peek(Runnable::run).peek(
+                        System.out::println
+                )
+        ).findFirst().filter(
+                frame -> frame instanceof JFrame
+        ).stream().findFirst().ifPresent(
+                (frame) -> ((JFrame) frame).setVisible(true)
         );
     }
 }
